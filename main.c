@@ -17,9 +17,9 @@ int main() {
     printf("Connected successfully to camera %d\n", hCam);
 
     // Try disconnecting from the camera:
-    int dRet = is_ExitCamera(hCam);
+    nRet = is_ExitCamera(hCam);
 
-    if (dRet != IS_SUCCESS)
+    if (nRet != IS_SUCCESS)
     {
         printf("Error disconnecting from camera.\n");
         return -2;
