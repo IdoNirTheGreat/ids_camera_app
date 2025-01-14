@@ -46,6 +46,38 @@ void setGlobalShutter(HIDS hCam)
 
 }
 
+void setFrameRate(HIDS hCam, double frameRate)
+{
+    printf("Trying to set new frame rate\n");
+    // Set the camera FPS:
+    double newFrameRate;
+    INT nRet = is_SetFrameRate(hCam, frameRate, &newFrameRate);
+    if (nRet != IS_SUCCESS)
+    {   
+        printf("Failed here 2\n");
+        printf("Error setting new frame rate.\n");
+        exit(-4);
+    }
+
+    printf("Successfully set frame rate %f for camera %d.\n", newFrameRate, hCam);
+}
+
+void setExposureTime(HIDS hCam, double exposureTime)
+{
+    printf("Trying to set new exposure time\n");
+    
+    // Set the camera exposure time:
+    INT nRet = is_Exposure(hCam, IS_EXPOSURE_CMD_SET_EXPOSURE, &exposureTime, sizeof(exposureTime));
+    if (nRet != IS_SUCCESS)
+    {   
+        printf("Error setting new exposure time.\n");
+        exit(-5);
+    }
+
+    printf("Successfully set exposure time to %f for camera %d.\n", exposureTime, hCam);
+}
+
+
 void disconnectFromCamera(HIDS hCam)
 {
     // Disconnect from the camera:
@@ -66,10 +98,27 @@ int main()
     HIDS hCam = 0;  // Initate the hCam (handle for the iDS camera)
 
     connectToCamera(&hCam);
-
     setExternalTrigger(hCam);
-
     setGlobalShutter(hCam);
+    setFrameRate(hCam, 10.00);
+    setExposureTime(hCam, 0.001);
+
+    INT triggerStatus = 0;
+
+    printf("Waiting for external trigger...\n");
+
+    while (1) {
+        // Check for external trigger status
+        INT nRet = is_SetExternalTrigger(hCam, IS_GET_TRIGGER_STATUS);
+        
+        if (nRet) {
+            printf("External trigger received!\n");
+            // break; // Exit the loop after receiving the trigger
+        }
+
+        // Small delay to avoid excessive CPU usage
+        Sleep(50); // 100 ms (Windows-specific; use usleep or nanosleep for Linux)
+    }
 
     disconnectFromCamera(hCam);
     
