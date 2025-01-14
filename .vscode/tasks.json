@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build",
+        "type": "shell",
+        "command": "gcc",
+        "args": [
+          "-g",
+          "main.c",
+          "-o",
+          "app.exe",
+          "-I",
+          "C:/Program Files/IDS/uEye/develop/include",
+          "-L",
+          "C:/Program Files/IDS/uEye/develop/lib",
+          "-lueye_api_64"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$gcc"]
+      }
+    ]
+  }
+  
